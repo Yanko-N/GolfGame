@@ -1,20 +1,31 @@
+using GolfGame.Classes;
+
 namespace GolfGame
 {
     internal static class Program
     {
+
+
+
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
         [STAThread]
         static void Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
+            //Inicializar a Application
             ApplicationConfiguration.Initialize();
-            Application.Run(
-                //AQUI FAÇO new FORM() 
-                //Isto irá fazer que a app ao inicializar entre nesta pagina
-                );
+
+            //Inicializar o GameManager
+            GameManager gameManager = GameManager.GetManager();
+
+            //Vou inicializar os valores das opçoes ja guardadas
+            GameManager.Instance.LoadOptions();
+
+
+
+            //A aplicação começa no menu principal
+            Application.Run(new MainMenu());
         }
     }
 }
