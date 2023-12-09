@@ -25,7 +25,8 @@ namespace GolfGame
 
 
             //A aplicação começa no menu principal
-            Application.Run(new MainMenu());
+            Application.Run(new MenuForm());
+            
         }
     }
 }
