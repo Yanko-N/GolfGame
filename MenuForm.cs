@@ -33,12 +33,12 @@ namespace GolfGame
                 Dock = DockStyle.Fill
             };
 
-            // Definição das instâncias das UserControls para preencher o espaço disponível
+            
             menuPart.Dock = DockStyle.Fill;
             highScorePart.Dock = DockStyle.Fill;
             optionsPart.Dock = DockStyle.Fill;
 
-            // Definição do número de linhas e colunas no TableLayoutPanel
+            // Definir colunas e Linhas na tabela
             tableLayoutPanel.RowCount = 2;
             tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
@@ -46,12 +46,12 @@ namespace GolfGame
             tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 60F));
             tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
 
-            // Adição das UserControls às células do TableLayoutPanel
+            // Adicionar os UserControls a tabela
             tableLayoutPanel.Controls.Add(menuPart, 0, 0);
             tableLayoutPanel.Controls.Add(highScorePart, 1, 0);
             tableLayoutPanel.Controls.Add(optionsPart, 1, 1);
 
-            // Adição do TableLayoutPanel aos controlos do formulário
+            // Adicionar a tabela ao form
             Controls.Add(tableLayoutPanel);
         }
     }

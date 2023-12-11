@@ -104,7 +104,7 @@ namespace GolfGame.Classes
         {
             double frictionValue = frictionValueSlider.Value / 10.0;
             frictionValueLabel.Text = $"Valor de Fricção: {frictionValue:F1}";
-            GameManager.Instance.optionsValues.frictionValue = (float)friction;
+            GameManager.Instance.optionsValues.frictionValue = (float)frictionValue;
 
 
         }

@@ -54,6 +54,11 @@ namespace GolfGame.Classes
         private async void StartButton_Click(object sender, EventArgs e)
         {
             //Logica do Start
+            GameManager.Instance.SaveOptions();
+            GameForm gameForm = new GameForm(this.ParentForm);
+            gameForm.Show();
+            this.ParentForm.Hide();
+            
         }
 
         

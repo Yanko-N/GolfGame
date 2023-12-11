@@ -1,6 +1,6 @@
 ﻿namespace GolfGame
 {
-    partial class MenuForm
+    partial class GameForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,20 +28,45 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
-            // MenuForm
+            // timer1
+            // 
+            this.timer1.Enabled = true;
+            this.timer1.Interval = 60;
+            this.timer1.Tick += new System.EventHandler(this.Update);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(800, 450);
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
+            // 
+            // GameForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Name = "MenuForm";
-            this.Text = "MenuForm";
+            this.Controls.Add(this.pictureBox1);
+            this.Name = "GameForm";
+            this.Text = "GameForm";
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
 
+
+
         #endregion
+        private System.Windows.Forms.Timer timer1;
+        private PictureBox pictureBox1;
     }
 }

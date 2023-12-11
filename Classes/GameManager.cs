@@ -67,22 +67,13 @@ namespace GolfGame.Classes
         /// <summary>
         /// Esta função irá guardar as opçoes submetidas na pagina das definições
         /// </summary>
-        public async Task  SaveOptions(int? _highScore, float? _frictionValue, float? _hitPower)
+        public async Task  SaveOptions()
         {
 
             string currentPath = Directory.GetCurrentDirectory();
 
             string fileName = "optionsValues.json";
             string optionsFilePath = String.Concat(currentPath, "\\", fileName);
-
-
-            //Verifico se os valores passados são nulos
-            //Se forem nulos o valor das opções não é guardado
-            optionsValues.highScore = _highScore == null ? optionsValues.highScore : (int)_highScore;
-            optionsValues.frictionValue = _frictionValue == null ? optionsValues.frictionValue : (float)_frictionValue;
-            optionsValues.hitPower = _hitPower == null ? optionsValues.hitPower : (float)_hitPower;
-
-
 
             try
             {
