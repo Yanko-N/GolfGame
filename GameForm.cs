@@ -11,6 +11,7 @@ using System.Drawing.Printing;
 using GolfGame.Classes;
 using System.Security.Cryptography;
 using System.Windows.Forms;
+using System.Numerics;
 
 namespace GolfGame
 {
@@ -18,14 +19,20 @@ namespace GolfGame
     {
         Form menuForm;
         Bitmap _backbuffer;
-        int tick = 0;
+        Game GamePlay;
+        Vector2 _originalSize;
 
         public GameForm(Form _menuForm)
         {
             InitializeComponent();
             menuForm = _menuForm;
             this.MinimumSize = new Size(500, 400);
-            
+            _originalSize = new Vector2(pictureBox1.Size.Width, pictureBox1.Size.Height);
+
+            //Criamos um BitMap com o tamanho da janela
+            _backbuffer = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+
+            GamePlay = new Game(pictureBox1);
 
 
         }
@@ -37,28 +44,18 @@ namespace GolfGame
             this.Close();
             menuForm.Show();
         }
-      
+
 
         private void Update(object sender, EventArgs e)
         {
-            _backbuffer = new Bitmap(pictureBox1.Width, pictureBox1.Height);
-            tick++;
-            if (tick >= pictureBox1.Width) tick = 0;
-            using (Graphics g = Graphics.FromImage(_backbuffer))
-            {
-                //Limpa o buffer
-                g.Clear(Color.White);
 
 
-                //AQUI PARA A FRENTE DESENHO O QUE QUISER
 
 
-                g.DrawEllipse(Pens.Black, new Rectangle(tick, 50, 100, 100));
-                g.DrawString($"{tick}", new Font("Arial", 20), Brushes.Black, tick, 150);
-            }
-            //Desenha o buffer
-            pictureBox1.Image = _backbuffer;
+            //Aqui dizemos que a imagem do picture box é a bitMap devolvida pela função da gameplay que faz o desenho do jogo
+            pictureBox1.Image = GamePlay.DrawGame(_backbuffer);
 
         }
+
     }
 }
