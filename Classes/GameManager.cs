@@ -17,6 +17,7 @@ namespace GolfGame.Classes
             highScore = 0;
             frictionValue = 3f;
             hitPower = 8f;
+            maxSpeed = 10f;
         }
 
         public int highScore { get; set; }
@@ -24,6 +25,7 @@ namespace GolfGame.Classes
         public float frictionValue { get; set; }
 
         public float hitPower { get; set; }
+        public float maxSpeed { get;  set; }
     }
     class GameManager
     {
@@ -180,10 +182,12 @@ namespace GolfGame.Classes
             const int highScoreDefault = 0;
             const float frictionDefault = 3f;
             const float hitPowerDefault = 8f;
+            const float maxSpeedDefaullt = 10f;
 
             optionsValues.highScore = highScoreDefault;
             optionsValues.frictionValue = frictionDefault;
             optionsValues.hitPower = hitPowerDefault;
+            optionsValues.maxSpeed = maxSpeedDefaullt;
 
         }
 

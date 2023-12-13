@@ -10,15 +10,21 @@ namespace GolfGame.Classes
 {
     class Game
     {
-        public Bola bola ;
-        public Buraco buraco;
+        Bola bola;
+        Buraco buraco;
         public int score;
+
+
+        private const float maxLenghtStrenght = 150;
+
+
+
 
         //Lista de obstaculos ainda tem de se adicionar
 
         public Game(PictureBox box) //esta caixa serve apenas para pegarmos as medidas da area de jogo
         {
-            Random random= new Random();
+            Random random = new Random();
 
             //Inicializar a bola
             bola = new Bola(Vector2.Zero, Vector2.Zero, Color.Red, 20);
@@ -26,7 +32,7 @@ namespace GolfGame.Classes
 
             //Vetor randomizado para a bola spawnar em no eixo x que pertence a 10% do tamanho da area de jogo e no eixo y entre toda a area de jogo
             Vector2 bolaPosicaoSpawn = new Vector2(random.Next(0 + (int)bola.size, (int)(box.Width * 0.1f - bola.size)), random.Next(0, box.Height - (int)bola.size));
-            
+
             //Seto a posicao da bola para a posicao randomizada
             bola.posicao = bolaPosicaoSpawn;
 
@@ -39,31 +45,44 @@ namespace GolfGame.Classes
             //Seto a posicao da buraco para a posicao randomizada
             buraco.posicao = buracoPosicaoSpawn;
 
-            
+
             //AQUI IREMOS FAZER DEPOIS O SPAWN AS OBSTACULOS
 
 
         }
 
+        public void AddForceBall(Vector2 directionNormalized,float strenght)
+        {
+            GameManager manager = GameManager.GetManager();
+            strenght = MathFunctions.Clamp(strenght, 0.1f, maxLenghtStrenght);
+
+            //A força e a direcção normalizada vezes a forca(Distancia do rato) vezes a Força de tacada
+            Vector2 force = directionNormalized * strenght * manager.optionsValues.hitPower;
+            bola.AddForce(force);
+        }
+        public void HandleMoviment()
+        {
+            bola.Move();
+        }
 
         public Bitmap DrawGame(Bitmap backbuffer)
         {
-           
-            
+
+
 
 
             using (Graphics g = Graphics.FromImage(backbuffer))
             {
                 //Limpa o buffer
                 g.Clear(Color.White);
-                
+
 
                 //AQUI PARA A FRENTE DESENHO O QUE QUISER
-                
 
 
-                g.DrawEllipse(Pens.Red, new Rectangle((int)bola.posicao.X , (int)bola.posicao.Y, (int)bola.size, (int)bola.size));
-                g.DrawEllipse(Pens.Black, new Rectangle((int)buraco.posicao.X, (int)buraco.posicao.Y, (int)buraco.size , (int)buraco.size ));
+                //Aqui vou ter que arranjar isto pq isto apenas desenha a parte de fora!
+                g.DrawEllipse(Pens.Red, new Rectangle((int)bola.posicao.X, (int)bola.posicao.Y, (int)bola.size, (int)bola.size));
+                g.DrawEllipse(Pens.Black, new Rectangle((int)buraco.posicao.X, (int)buraco.posicao.Y, (int)buraco.size, (int)buraco.size));
 
             }
             return backbuffer;
