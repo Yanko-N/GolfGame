@@ -10,13 +10,13 @@ namespace GolfGame.Classes
 {
     class Game
     {
-        Bola bola;
+        public Bola bola;
         Buraco buraco;
-        public int score;
+        public int score = 0;
 
 
         private const float maxLenghtStrenght = 150;
-
+        private bool wonState = false;
 
 
 
@@ -27,7 +27,7 @@ namespace GolfGame.Classes
             Random random = new Random();
 
             //Inicializar a bola
-            bola = new Bola(Vector2.Zero, Vector2.Zero, Color.Red, 20);
+            bola = new Bola(Vector2.Zero, Vector2.Zero, Color.Red, 10);
 
 
             //Vetor randomizado para a bola spawnar em no eixo x que pertence a 10% do tamanho da area de jogo e no eixo y entre toda a area de jogo
@@ -51,41 +51,98 @@ namespace GolfGame.Classes
 
         }
 
-        public void AddForceBall(Vector2 directionNormalized,float strenght)
+        public void AddForceBall(Vector2 directionNormalized, float strenght)
         {
-            GameManager manager = GameManager.GetManager();
-            strenght = MathFunctions.Clamp(strenght, 0.1f, maxLenghtStrenght);
+            if (bola.canShoot)
+            {
+                GameManager manager = GameManager.GetManager();
+                strenght = MathFunctions.Clamp(strenght, 0.1f, maxLenghtStrenght);
 
-            //A força e a direcção normalizada vezes a forca(Distancia do rato) vezes a Força de tacada
-            Vector2 force = directionNormalized * strenght * manager.optionsValues.hitPower;
-            bola.AddForce(force);
+                //A força e a direcção normalizada vezes a forca(Distancia do rato) vezes a Força de tacada
+                Vector2 force = directionNormalized * strenght * manager.optionsValues.hitPower;
+                score++;
+                bola.AddForce(force);
+
+            }
+        }
+
+        public void HandleCollision(Vector2 arenaSize)
+        {
+            bola.Collisions(arenaSize);
+
+
+        }
+
+        public bool CheckWinningCollision()
+        {
+            if (wonState) {
+                return true;
+            }
+
+            if (bola.posicao.X < (buraco.posicao.X + buraco.size / 2) && bola.posicao.X > (buraco.posicao.X - buraco.size / 2)
+               && bola.posicao.Y < (buraco.posicao.Y + buraco.size / 2) && bola.posicao.Y > (buraco.posicao.Y - buraco.size / 2))
+            {
+                
+                return wonState = true;
+            }
+            else
+            {
+                return false;
+            }
+
+
         }
         public void HandleMoviment()
         {
+
             bola.Move();
+
         }
 
-        public Bitmap DrawGame(Bitmap backbuffer)
+        public void DrawGame(Graphics g, Point clickPoint, Point endPoint, bool isShooting)
         {
 
 
+            //Limpa o buffer
+            g.Clear(Color.LightGreen);
+            GameManager.Instance.DrawText(g, "canShoot:" + bola.canShoot.ToString() + "|score:" + score.ToString(), Vector2.One, 14);
 
 
-            using (Graphics g = Graphics.FromImage(backbuffer))
+            //AQUI PARA A FRENTE DESENHO O QUE QUISER
+            if (isShooting && bola.canShoot)
             {
-                //Limpa o buffer
-                g.Clear(Color.White);
+                Vector2 direction = new Vector2(endPoint.X - clickPoint.X,
+                                            endPoint.Y - clickPoint.Y) * -1;
 
+                float distance = MathFunctions.Clamp(direction.Length(), 0, maxLenghtStrenght);
 
-                //AQUI PARA A FRENTE DESENHO O QUE QUISER
-
-
-                //Aqui vou ter que arranjar isto pq isto apenas desenha a parte de fora!
-                g.DrawEllipse(Pens.Red, new Rectangle((int)bola.posicao.X, (int)bola.posicao.Y, (int)bola.size, (int)bola.size));
-                g.DrawEllipse(Pens.Black, new Rectangle((int)buraco.posicao.X, (int)buraco.posicao.Y, (int)buraco.size, (int)buraco.size));
+                g.DrawRectangle(Pens.Black, new Rectangle(clickPoint.X, clickPoint.Y, 10, 10));
+                DrawArrow(g, bola.posicao, direction, distance);
 
             }
-            return backbuffer;
+
+            //Aqui vou ter que arranjar isto pq isto apenas desenha a parte de fora!
+
+            g.FillEllipse(Brushes.Black, new Rectangle((int)buraco.posicao.X - (int)(buraco.size / 2), (int)buraco.posicao.Y - (int)(buraco.size / 2), (int)buraco.size, (int)buraco.size));
+
+            g.FillEllipse(Brushes.Red, new Rectangle((int)bola.posicao.X - (int)(bola.size / 2), (int)bola.posicao.Y - (int)(bola.size / 2), (int)bola.size, (int)bola.size));
+        }
+
+        private void DrawArrow(Graphics g, Vector2 inicialPoint, Vector2 direction, float length)
+        {
+
+            // Normalize a direção para saber a sua direção e termos controlo do tamanho
+            Vector2 normalizado = MathFunctions.Normalize(direction);
+
+
+            // Calcule as coordenadas finais da seta
+            Vector2 end = new Vector2(inicialPoint.X + normalizado.X * (float)length, inicialPoint.Y + normalizado.Y * (float)length);
+
+            // Desenhe a linha principal da seta
+            g.DrawLine(Pens.Black, inicialPoint.X, inicialPoint.Y, end.X, end.Y);
+
+
+
         }
     }
 }

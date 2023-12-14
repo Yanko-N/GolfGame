@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Text.Json;
 using Microsoft.VisualBasic;
 using System.IO;
+using System.Numerics;
 
 namespace GolfGame.Classes
 {
@@ -14,7 +15,7 @@ namespace GolfGame.Classes
     {
         public OptionsValues()
         {
-            highScore = 0;
+            highScore = 999999;
             frictionValue = 3f;
             hitPower = 8f;
             maxSpeed = 10f;
@@ -64,6 +65,26 @@ namespace GolfGame.Classes
             }
 
             return instance;
+        }
+
+        /// <summary>
+        /// Para desenhar no ecra a qualquer altura a função para desenhar na posicao 
+        /// </summary>
+        /// <param name="g"></param>
+        /// <param name="text"></param>
+        /// <param name="position"></param>
+        /// <param name="size"></param>
+        public async Task DrawText(Graphics g, string text, Vector2 position, int size)
+        {
+            // Criar uma pen usando o Using porque assim a alocação de memoria é libertada no fim do escopo do using
+            using (Font font = new Font("Arial", size, FontStyle.Regular))
+            {
+               
+
+                g.DrawString(text, font, Brushes.Black, MathFunctions.TransformVectorToPoint(position));
+
+
+            }
         }
 
         /// <summary>
@@ -163,7 +184,7 @@ namespace GolfGame.Classes
                     catch (Exception ex)
                     {
                         Console.WriteLine($"Erro a ler o ficheiro: {ex.Message}");
-                        OptionsErrorHandler();
+                        await OptionsErrorHandlerAsync(optionsFilePath);
 
                     }
                 }
@@ -177,17 +198,34 @@ namespace GolfGame.Classes
         /// <summary>
         /// Esta função vai renicializar o ficheiro dos dados das opçoes e os os dados também
         /// </summary>
-        void OptionsErrorHandler()
+        async Task OptionsErrorHandlerAsync(string optionsFilePath)
         {
-            const int highScoreDefault = 0;
+            const int highScoreDefault = 999999;
             const float frictionDefault = 3f;
             const float hitPowerDefault = 8f;
             const float maxSpeedDefaullt = 10f;
 
-            optionsValues.highScore = highScoreDefault;
-            optionsValues.frictionValue = frictionDefault;
-            optionsValues.hitPower = hitPowerDefault;
-            optionsValues.maxSpeed = maxSpeedDefaullt;
+
+
+            try
+            {
+                //Abro o ficheiro
+                using (FileStream createStream = new FileStream(optionsFilePath, FileMode.Create, FileAccess.Write))
+                {
+
+                    OptionsValues options = await JsonSerializer.DeserializeAsync<OptionsValues>(createStream);
+
+                    this.optionsValues = options;
+
+                    Console.WriteLine(options.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro a criar o ficheiro: {ex.Message}");
+
+            }
+            LoadOptions();
 
         }
 

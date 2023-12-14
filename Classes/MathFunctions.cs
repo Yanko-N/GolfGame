@@ -9,7 +9,23 @@ namespace GolfGame.Classes
 {
     public static class MathFunctions
     {
-        public static Vector2 Normalize(this Vector2 vector)
+        public static Point TransformSizeToPoint(Size size)
+        {
+            return new Point(size.Width, size.Height);
+        }
+        public static Vector2 TransformSizeToVector(Size size)
+        {
+            return new Vector2(size.Width, size.Height);
+        }
+        public static Point TransformVectorToPoint(Vector2 vector)
+        {
+            return new Point((int)vector.X,(int) vector.Y);
+        }
+        public static Vector2 TransformPointToVector(Point point)
+        {
+            return new Vector2(point.X,point.Y);
+        }
+        public static Vector2 Normalize(Vector2 vector)
         {
             float length = vector.Length();
 

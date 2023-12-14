@@ -31,6 +31,8 @@ namespace GolfGame.Classes
 
             InitializeComponent();
             this.Load += OptionsPage_Load;
+            this.BackColor = Color.WhiteSmoke;
+            
 
         }
 
@@ -38,9 +40,9 @@ namespace GolfGame.Classes
         private void OptionsPage_Load(object sender, EventArgs e)
         {
             manager = GameManager.GetManager();
-            this.hitPower = (int)manager.optionsValues.hitPower;
-            this.friction = (int)manager.optionsValues.frictionValue;
-            this.maxSpeed = (int)manager.optionsValues.maxSpeed;
+            this.hitPower = (int)(manager.optionsValues.hitPower * 10);
+            this.friction = (int)(manager.optionsValues.frictionValue * 10);
+            this.maxSpeed = (int)(manager.optionsValues.maxSpeed * 10);
 
             InitializeComponents();
         }
@@ -56,7 +58,7 @@ namespace GolfGame.Classes
                 TickFrequency = 10,
                 LargeChange = 10,
                 SmallChange = 1,
-                Value = maxSpeed * 10,
+                Value = maxSpeed,
                 Dock = DockStyle.Top
             };
 
@@ -68,7 +70,7 @@ namespace GolfGame.Classes
                 TickFrequency = 10,
                 LargeChange = 10,
                 SmallChange = 1,
-                Value = hitPower * 10,
+                Value = hitPower,
                 Dock = DockStyle.Top
             };
 
@@ -80,28 +82,28 @@ namespace GolfGame.Classes
                 TickFrequency = 10,
                 LargeChange = 10,
                 SmallChange = 1,
-                Value = friction * 10,
+                Value = friction,
                 Dock = DockStyle.Top
             };
 
             //Criar e configurar a label para os valroes atuais
             maxSpeedLabel = new Label
             {
-                Text = String.Join(":", "Velocidade Max da Bola", maxSpeed), // Valor inicial
+                Text = $"Velocidade Maxima da Bola {maxSpeed /10f}", // Valor inicial
                 TextAlign = ContentAlignment.MiddleCenter,
                 Dock = DockStyle.Top
             };
             // Criar e configurar etiquetas para exibir os valores atuais
             hitPowerLabel = new Label
             {
-                Text = String.Join(":", "Força Maxima da tacada", hitPower), // Valor inicial
+                Text = $"Potencia da tacada {hitPower / 10f}", // Valor inicial
                 TextAlign = ContentAlignment.MiddleCenter,
                 Dock = DockStyle.Top
             };
 
             frictionValueLabel = new Label
             {
-                Text = String.Join(":", "Valor do Atrito do chao", friction), //valor inicial
+                Text = $"Valor do Atrito do Terreno {friction / 10f}", //valor inicial
                 TextAlign = ContentAlignment.MiddleCenter,
                 Dock = DockStyle.Top
             };
@@ -123,23 +125,23 @@ namespace GolfGame.Classes
         private void MaxSpeedValueSlider_Scroll(object? sender, EventArgs e)
         {
 
-            double maxSpeedValue = maxSpeedValueSlider.Value / 10.0;
-            maxSpeedLabel.Text = $"Velocidade Maxima: {maxSpeedValue:F1}";
+            float maxSpeedValue = maxSpeedValueSlider.Value / 10f;
+            maxSpeedLabel.Text = $"Velocidade Maxima da Bola {maxSpeedValue:F1}";
             GameManager.Instance.optionsValues.maxSpeed = (float)maxSpeedValue;
         }
 
         private void HitPowerSlider_Scroll(object sender, EventArgs e)
         {
-            double hitPowerValue = hitPowerSlider.Value / 10.0;
-            hitPowerLabel.Text = $"Potência do Golpe: {hitPowerValue:F1}";
+            float hitPowerValue = (hitPowerSlider.Value / 10f);
+            hitPowerLabel.Text = $"Potencia da tacada {hitPowerValue:F1}";
             GameManager.Instance.optionsValues.hitPower = (float)hitPowerValue;
-            
+
         }
 
         private void FrictionValueSlider_Scroll(object sender, EventArgs e)
         {
-            double frictionValue = frictionValueSlider.Value / 10.0;
-            frictionValueLabel.Text = $"Valor de Fricção: {frictionValue:F1}";
+            float frictionValue = frictionValueSlider.Value / 10f;
+            frictionValueLabel.Text = $"Valor do Atrito do Terreno {frictionValue:F1}";
             GameManager.Instance.optionsValues.frictionValue = (float)frictionValue;
 
 

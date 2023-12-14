@@ -14,13 +14,15 @@ namespace GolfGame
     public partial class MenuForm : Form
     {
 
-        MainMenuPage menuPart = new MainMenuPage();
         HighScorePage highScorePart = new HighScorePage();
+        MainMenuPage menuPart;
+
         OptionsPage optionsPart = new OptionsPage();
         public MenuForm()
         {
             InitializeComponent();
             this.MinimumSize = new System.Drawing.Size(500, 400);
+            menuPart = new MainMenuPage(highScorePart);
 
             InitializeComponents();
         }

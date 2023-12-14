@@ -13,11 +13,13 @@ namespace GolfGame.Classes
     public partial class MainMenuPage : UserControl
     {
         private Label titleLabel;
+        HighScorePage scorePage;
         private Button startButton;
 
-        public MainMenuPage()
+        public MainMenuPage(  HighScorePage _scorePage)
         {
             InitializeComponent();
+            scorePage = _scorePage;
             InitializeComponents();
         }
         private void InitializeComponents()
@@ -55,7 +57,9 @@ namespace GolfGame.Classes
         {
             //Logica do Start
             GameManager.Instance.SaveOptions();
-            GameForm gameForm = new GameForm(this.ParentForm);
+            GameForm gameForm = new GameForm(this.ParentForm, scorePage);
+            gameForm.ClientSize = this.ParentForm.ClientSize;
+            gameForm.Location= this.ParentForm.Location;
             gameForm.Show();
             this.ParentForm.Hide();
             

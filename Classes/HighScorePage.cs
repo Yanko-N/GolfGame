@@ -12,34 +12,39 @@ namespace GolfGame.Classes
 {
     public partial class HighScorePage : UserControl
     {
-        private Label highScoreLabel;
+        public Label highScoreLabel;
         private int score;
         public HighScorePage()
         {
             InitializeComponent();
-            this.Load += HighScorePage_OnLoad;
+            this.BackColor = Color.Wheat;
+            this.BorderStyle = BorderStyle.Fixed3D;
+            
             InitializeComponents();
         }
 
-        private void HighScorePage_OnLoad(object sender,EventArgs e)
+        public void changeScore(int _score)
         {
-           GameManager manager = GameManager.GetManager();
-            this.score = (int)manager.optionsValues.highScore;
+            score = _score;
+            highScoreLabel.Text = $"O melhor jogo foi com {score} tacadas";
         }
         private void InitializeComponents()
         {
-            //Criar Label para o HighScore
+            this.score = GameManager.Instance.optionsValues.highScore;
 
+            //Criar Label para o HighScore
             highScoreLabel = new Label
             {
-                Text = String.Join(" ","The Highest Score is : ", score.ToString()), 
+                Text = $"O melhor jogo foi com {score} tacadas",
                 Font = new Font("Arial", 20, FontStyle.Bold),
                 TextAlign = ContentAlignment.MiddleCenter,
-                Dock = DockStyle.Fill
+                Dock = DockStyle.Fill,
+
+
             };
 
-            highScoreLabel.BackColor = Color.LightYellow;
-            highScoreLabel.BorderStyle = BorderStyle.FixedSingle;
+            if (score >= 999999) highScoreLabel.Text = "Bem Vindo este trabalho foi realizado por Paulo Novo";
+           
 
             Controls.Add(highScoreLabel);
         }
