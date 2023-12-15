@@ -9,6 +9,12 @@ namespace GolfGame.Classes
 {
     public static class MathFunctions
     {
+
+        public static Vector2 ScaleVectorToNewSpace(Vector2 targetVector,Vector2 originalSize,Vector2 currentSize) {
+
+           return new Vector2((targetVector.X / currentSize.X) * originalSize.X,
+                                                                   (targetVector.Y / currentSize.Y) * originalSize.Y);
+        }
         public static Point TransformSizeToPoint(Size size)
         {
             return new Point(size.Width, size.Height);

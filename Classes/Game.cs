@@ -21,6 +21,8 @@ namespace GolfGame.Classes
 
 
         //Lista de obstaculos ainda tem de se adicionar
+        List<Obstaculo> obstaculos=new List<Obstaculo>();
+
 
         public Game(PictureBox box) //esta caixa serve apenas para pegarmos as medidas da area de jogo
         {
@@ -47,7 +49,19 @@ namespace GolfGame.Classes
 
 
             //AQUI IREMOS FAZER DEPOIS O SPAWN AS OBSTACULOS
+            int numeroObstaculos = random.Next(3, 10);
 
+            for(int i = 0; i < numeroObstaculos; i++)
+            {
+
+                int lenght = random.Next(5, 10);
+
+                Vector2 posicao = new Vector2(random.Next(0 + (int)(box.Width * 0.1f) + (lenght / 2), box.Width - (int)(box.Width * 0.1f) - (lenght / 2)),
+                                            random.Next(lenght/2,box.Height - lenght/2));
+
+                Obstaculo newObstaculo = new Obstaculo(posicao,lenght);
+                obstaculos.Add(newObstaculo);
+            }
 
         }
 
@@ -108,6 +122,8 @@ namespace GolfGame.Classes
             GameManager.Instance.DrawText(g, "canShoot:" + bola.canShoot.ToString() + "|score:" + score.ToString(), Vector2.One, 14);
 
 
+            
+
             //AQUI PARA A FRENTE DESENHO O QUE QUISER
             if (isShooting && bola.canShoot)
             {
@@ -126,6 +142,12 @@ namespace GolfGame.Classes
             g.FillEllipse(Brushes.Black, new Rectangle((int)buraco.posicao.X - (int)(buraco.size / 2), (int)buraco.posicao.Y - (int)(buraco.size / 2), (int)buraco.size, (int)buraco.size));
 
             g.FillEllipse(Brushes.Red, new Rectangle((int)bola.posicao.X - (int)(bola.size / 2), (int)bola.posicao.Y - (int)(bola.size / 2), (int)bola.size, (int)bola.size));
+
+
+            foreach(var obstaculo in obstaculos)
+            {
+                obstaculo.Draw(g);
+            }
         }
 
         private void DrawArrow(Graphics g, Vector2 inicialPoint, Vector2 direction, float length)

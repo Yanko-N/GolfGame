@@ -176,7 +176,30 @@ namespace GolfGame
                     highScorePage.highScoreLabel.Text = $"O melhor jogo foi com {score} tacadas";
                 }
 
-                GameManager.Instance.DrawText(g, "You Won", new Vector2(this.Size.Width/2 , this.Size.Height / 2), 32);
+                Vector2 currentSize = MathFunctions.TransformSizeToVector(pictureBox1.Size);
+
+                if (currentSize != originalSize)
+                {
+
+                    Vector2 scaledHalf = MathFunctions.ScaleVectorToNewSpace(MathFunctions.TransformSizeToVector(this.Size) * Vector2.One * 0.25f, originalSize, currentSize);
+
+
+                    GameManager.Instance.DrawText(g, "You Won", scaledHalf, 32);
+
+
+                }
+                else
+                {
+
+                    var vectorPosicao = new Vector2(this.Size.Width / 4, this.Size.Height / 4);
+                    
+
+                    GameManager.Instance.DrawText(g, "You Won", vectorPosicao, 32);
+
+
+                }
+
+
 
                 endGameMenu.Visible=true;
                 
@@ -210,12 +233,10 @@ namespace GolfGame
 
                 if (currentSize != originalSize)
                 {
-                    Vector2 scaledClickVector = new Vector2((mouseInicialPoint.X / currentSize.X) * originalSize.X,
-                                                                (mouseInicialPoint.Y / currentSize.Y) * originalSize.Y);
-
-                    Vector2 scaledCurrentVector = new Vector2((mouseCurrent.X / currentSize.X) * originalSize.X,
-                                                                (mouseCurrent.Y / currentSize.Y) * originalSize.Y);
-
+                    Vector2 scaledClickVector = MathFunctions.ScaleVectorToNewSpace(MathFunctions.TransformPointToVector(mouseInicialPoint), originalSize, currentSize);
+                   
+                    Vector2 scaledCurrentVector = MathFunctions.ScaleVectorToNewSpace(MathFunctions.TransformPointToVector(mouseCurrent),originalSize,currentSize);
+                    
                     gamePlay.DrawGame(g, MathFunctions.TransformVectorToPoint(scaledClickVector), MathFunctions.TransformVectorToPoint(scaledCurrentVector), isMouseDown);
 
 
