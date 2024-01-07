@@ -19,8 +19,9 @@ namespace GolfGame.Classes
 
         public bool canShoot = true;
 
-        
+        const int MAX_POS_SAVED = 10;
 
+        private Vector2[] lastPositions = new Vector2[MAX_POS_SAVED];
 
         public Bola(Vector2 posicao, Vector2 velocidade, Color cor, float size)
         {
@@ -29,6 +30,11 @@ namespace GolfGame.Classes
             this.acelaracao = Vector2.Zero;
             this.cor = cor;
             this.size = size;
+
+            for (int i = 0; i < MAX_POS_SAVED; i++)
+            {
+                lastPositions[i] = Vector2.Zero;
+            }
         }
 
         //Vai faltar adicionar as colisões com os obstaculos
@@ -37,10 +43,96 @@ namespace GolfGame.Classes
         /// Tem de ser apenas chamada no UPDATE com os parametros
         /// </summary>
         /// <param name="arenaSize"></param>
-        public void Collisions(Vector2 arenaSize)
+        public void Collisions(Vector2 arenaSize, List<Obstaculo> obstaculos)
         {
+            int count = 0;
+            for (int i = 0; i < 5; i++)
+            {
+                if (lastPositions[i] == Vector2.Zero)
+                {
+                    lastPositions[i] = posicao;
+                    count++;
+                    break;
+                }
+                else
+                {
+                    count++;
+                }
+
+            }
+
             //Mais importante de verificar
             OffLimit(arenaSize);
+
+            Rectangle newRetangulo = MathFunctions.GetLineRectangle(lastPositions[0], lastPositions[count - 1]);
+            foreach (var ob in obstaculos)
+            {
+
+                if (MathFunctions.RectangleIntersect(newRetangulo, ob.retangulo, out Point recIntersectionPoint))
+                {
+                    //Automaticamente apos a colisão resetamos as ultimas posicoes
+                    for (int i = 0; i < MAX_POS_SAVED; i++)
+                    {
+                        lastPositions[i] = Vector2.Zero;
+
+                    }
+
+
+                    // Determine collision side
+                    float diferencaX = posicao.X - ob.posicao.X;
+                    float diferencaY = posicao.Y - ob.posicao.Y;
+
+
+                    if (diferencaX > 0)
+                    {
+                        // collide da esquerda
+                        //colocar a bola no sitio correto
+                        posicao = MathFunctions.TransformPointToVector(recIntersectionPoint) - new Vector2(size, 0); ;
+                        velocidade *= new Vector2(-1, 1);
+
+                    }
+                    else
+                    {
+                        // collide da direita
+                        //colocar a bola no sitio correto
+                        posicao = MathFunctions.TransformPointToVector(recIntersectionPoint) + new Vector2(size , 0);
+
+                        velocidade *= new Vector2(-1, 1);
+                    }
+
+                    if (diferencaY > 0)
+                    {
+                        // collide na parte de cimaa
+                        //colocar a bola no sitio correto
+                        posicao = MathFunctions.TransformPointToVector(recIntersectionPoint) - new Vector2(0, size );
+
+                        velocidade *= new Vector2(1, -1);
+                    }
+                    else
+                    {
+                        // collide na parte de baixo
+                        //colocar a bola no sitio correto
+                        posicao = MathFunctions.TransformPointToVector(recIntersectionPoint) + new Vector2(0, size );
+
+                        velocidade *= new Vector2(1, -1);
+                    }
+
+
+
+
+                }
+
+            }
+
+
+            if (count == 5)
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    lastPositions[i] = Vector2.Zero;
+
+                }
+            }
         }
 
         /// <summary>
@@ -52,11 +144,11 @@ namespace GolfGame.Classes
             if (posicao.X + size / 2 > arenaSize.X ||
                 posicao.X - size / 2 < 0)
             {
-                velocidade *= new Vector2(-1, 1) ;
-                
-                if(posicao.X + size / 2 > arenaSize.X)
+                velocidade *= new Vector2(-1, 1);
+
+                if (posicao.X + size / 2 > arenaSize.X)
                 {
-                    posicao = new Vector2(arenaSize.X - size/2 ,posicao.Y);
+                    posicao = new Vector2(arenaSize.X - size / 2, posicao.Y);
                 }
 
                 if (posicao.X - size / 2 < 0)
@@ -68,11 +160,11 @@ namespace GolfGame.Classes
             if (posicao.Y + size / 2 > arenaSize.Y ||
                posicao.Y - size / 2 < 0)
             {
-                velocidade *= new Vector2(1, -1) ;
+                velocidade *= new Vector2(1, -1);
 
                 if (posicao.Y + size / 2 > arenaSize.Y)
                 {
-                    posicao = new Vector2(posicao.X, arenaSize.Y - size/2);
+                    posicao = new Vector2(posicao.X, arenaSize.Y - size / 2);
                 }
 
                 if (posicao.Y - size / 2 < 0)
@@ -104,7 +196,7 @@ namespace GolfGame.Classes
             velocidade -= MathFunctions.Normalize(velocidade) * frictionForce * Time.deltaTime;
 
             //0.5f para servir de ajuda para a condição ativar
-            if(velocidade.Length() > 0 + 8f)
+            if (velocidade.Length() > 0 + 8f)
             {
                 canShoot = false;
             }
@@ -112,7 +204,7 @@ namespace GolfGame.Classes
             {
                 canShoot = true;
             }
-            
+
             //resetar a acelaração
             acelaracao = Vector2.Zero;
 

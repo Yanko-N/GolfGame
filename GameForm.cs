@@ -216,16 +216,16 @@ namespace GolfGame
             //Aqui vamos chamar a função que irá alterar as posição da bola
             gamePlay.HandleMoviment();
 
+
+
             //Aqui vamos chamar a função que controla as colisoes da bola
             gamePlay.HandleCollision(MathFunctions.TransformSizeToVector(_backbuffer.Size));
 
 
-            //Aqui dizemos que a imagem do picture box é a bitMap devolvida pela função da gameplay que faz o desenho do jogo
 
-
+            
             using (Graphics g = Graphics.FromImage(_backbuffer))
             {
-
 
 
 

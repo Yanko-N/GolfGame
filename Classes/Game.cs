@@ -56,10 +56,9 @@ namespace GolfGame.Classes
 
                 int lenght = random.Next(5, 10);
 
-                Vector2 posicao = new Vector2(random.Next(0 + (int)(box.Width * 0.1f) + (lenght / 2), box.Width - (int)(box.Width * 0.1f) - (lenght / 2)),
-                                            random.Next(lenght/2,box.Height - lenght/2));
+               
 
-                Obstaculo newObstaculo = new Obstaculo(posicao,lenght);
+                Obstaculo newObstaculo = new Obstaculo(box,lenght,obstaculos);
                 obstaculos.Add(newObstaculo);
             }
 
@@ -82,7 +81,8 @@ namespace GolfGame.Classes
 
         public void HandleCollision(Vector2 arenaSize)
         {
-            bola.Collisions(arenaSize);
+            bola.Collisions(arenaSize,obstaculos);
+
 
 
         }
