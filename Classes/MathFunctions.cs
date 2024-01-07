@@ -32,39 +32,107 @@ namespace GolfGame.Classes
         {
             return new Vector2(point.X, point.Y);
         }
-        public static Rectangle GetLineRectangle(Vector2 point1, Vector2 point2)
+        public static Vector2 GetLineVector(Vector2 point1, Vector2 point2)
         {
-            
-            float minX = Math.Min(point1.X, point2.X);
-            float minY = Math.Min(point1.Y, point2.Y);
-            float maxX = Math.Max(point1.X, point2.X);
-            float maxY = Math.Max(point1.Y, point2.Y);
 
-           
-            int width = (int)(maxX - minX);
-            int height = (int)(maxY - minY);
 
-            
-            return new Rectangle((int)minX, (int)minY, width, height);
+            return point2 - point1;
         }
 
-        public static bool RectangleIntersect(Rectangle rec1,Rectangle rec2,out Point intersectionPoint)
-        {
-            
-            Rectangle intersection = Rectangle.Intersect(rec1, rec2);
 
-            if (!intersection.IsEmpty)
+        /// <summary>
+        /// Esta função irá retornar verdadeiro se a linha colidir com um retangulo e se bater retorna verdaderiro
+        /// e ira mandar um vetor com as coordenadas da interseção
+        /// </summary>
+        /// <param name="startPoint"> this simbolizes the startPoint of the ball</param>
+        /// <param name="endPoint">this simbolizes the current Point of the ball</param>
+        /// <param name="rec">this simbolizes the rectangle that is gonna intersect</param>
+        /// <param name="intersectionPoint">this simbolizes the first intersection Point</param>
+        /// <returns></returns>
+        public static bool LineRectangleIntersect(Vector2 startPoint, Vector2 endPoint, Rectangle rec, out Vector2 intersectionPoint)
+        {
+            bool left = LineLineIntersect(startPoint, endPoint, new Vector2(rec.Left, rec.Top), new Vector2(rec.Left, rec.Bottom), out Vector2 intersectPoint1);
+            bool right = LineLineIntersect(startPoint, endPoint, new Vector2(rec.Right, rec.Top), new Vector2(rec.Right, rec.Bottom), out Vector2 intersectPoint2);
+            bool top = LineLineIntersect(startPoint, endPoint, new Vector2(rec.Left, rec.Top), new Vector2(rec.Right, rec.Top), out Vector2 intersectPoint3);
+            bool bottom = LineLineIntersect(startPoint, endPoint, new Vector2(rec.Left, rec.Bottom), new Vector2(rec.Right, rec.Bottom), out Vector2 intersectPoint4);
+
+
+            intersectionPoint = Vector2.Zero;
+            List<Vector2> intersectPoints = new List<Vector2>
             {
-                
-                intersectionPoint = new Point(intersection.X, intersection.Y);
+                intersectPoint1,
+                intersectPoint2,
+                intersectPoint3,
+                intersectPoint4
+            };
+
+            float bestLenght = float.MaxValue;
+
+            if (left || right || top || bottom)
+            {
+                //Houve colisao agora vamos ver qual é a interseção mais proxima do ponto inicial
+                for (int i = 0; i < intersectPoints.Count ; i++)
+                {
+                    if (!Vector2.Equals(intersectPoints[i], Vector2.Zero))
+                    {
+                        Vector2 vetorDirecao = intersectPoints[i] - startPoint;
+
+                        float distance = vetorDirecao.Length();
+
+                        if (distance < bestLenght)
+                        {
+                            bestLenght = distance;
+                            intersectionPoint = intersectPoints[i];
+                        }
+                    }
+                    
+                }
+
                 return true;
             }
-            else
+
+            return false;
+        }
+
+        /// <summary>
+        /// Retorna verdadeiro se duas linhas se intersetao e devolveo ponto de intersecao
+        /// retorna falso se não há colisao e devolve o ponto de interseção Vector 0
+        /// </summary>
+        /// <param name="startPointA"></param>
+        /// <param name="endPointA"></param>
+        /// <param name="startPointB"></param>
+        /// <param name="endPointB"></param>
+        /// <param name="intersectionPoint"></param>
+        /// <returns></returns>
+        public static bool LineLineIntersect(Vector2 startPointA, Vector2 endPointA, Vector2 startPointB, Vector2 endPointB, out Vector2 intersectionPoint)
+        {
+
+
+            float denominador = (endPointB.X - startPointB.X) * (endPointA.Y - startPointA.Y) - (endPointB.Y - startPointB.Y) * (endPointA.X - startPointA.X);
+
+            if (denominador == 0)
             {
-                
-                intersectionPoint = Point.Empty;
+                // As linhas são paralelas (ou coincidentes), não há interseção
+                intersectionPoint = Vector2.Zero;
                 return false;
             }
+
+
+            //distancia que terao de ser iguais para colidir
+            //por razões de simplificação tem de ser entre 0 e 1 ambas
+            float alpha_A = ((endPointB.X - startPointB.X) * (startPointB.Y - startPointA.Y) - (endPointB.Y - startPointB.Y) * (startPointB.X - startPointA.X)) / ((endPointB.X - startPointB.X) * (endPointA.Y - startPointA.Y) - (endPointB.Y - startPointB.Y) * (endPointA.X - startPointA.X));
+            float alpha_B = ((endPointA.X - startPointA.X) * (startPointB.Y - startPointA.Y) - (endPointA.Y - startPointA.Y) * (startPointB.X - startPointA.X)) / ((endPointB.X - startPointB.X) * (endPointA.Y - startPointA.Y) - (endPointB.Y - startPointB.Y) * (endPointA.X - startPointA.X));
+
+            intersectionPoint = Vector2.Zero;
+            if (alpha_A >= 0 && alpha_A <= 1 && alpha_B >= 0 && alpha_B <= 1)
+            {
+
+                intersectionPoint = new Vector2(startPointA.X + (alpha_A * (endPointA.X - startPointA.X)), startPointA.Y + (alpha_A * (endPointA.Y - startPointA.Y)));
+
+                return true;
+            }
+
+            return false;
         }
         public static Vector2 Normalize(Vector2 vector)
         {
@@ -87,12 +155,10 @@ namespace GolfGame.Classes
             return Math.Max(min, Math.Min(value, max));
         }
 
-        public static bool isColliding(Rectangle rectangle1, Rectangle rectangle2)
+        public static bool isCollidingRectangles(Rectangle rectangle1, Rectangle rectangle2)
         {
-            if (rectangle1.X + rectangle1.Width < rectangle2.X ||
-                rectangle2.X + rectangle2.Width < rectangle1.X ||
-                rectangle1.Y + rectangle1.Height < rectangle2.Y ||
-                rectangle2.Y + rectangle2.Height < rectangle1.Y){
+            if (Rectangle.Intersect(rectangle1, rectangle2) == Rectangle.Empty)
+            {
                 //SEM COLISAO
                 return false;
             }

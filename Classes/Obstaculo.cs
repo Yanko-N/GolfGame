@@ -13,7 +13,9 @@ namespace GolfGame.Classes
 
 
         public Size size { get; set; }
-        public Rectangle retangulo { get; set; } 
+        public Rectangle retangulo { get; set; }
+
+        public Color color { get; set; } = Color.SandyBrown;
 
         public Obstaculo(PictureBox box, int _lenght, List<Obstaculo> obstaculos)
         {
@@ -29,17 +31,17 @@ namespace GolfGame.Classes
             //é um retangulo virado na horizontal
             if (random.NextSingle() >= 0.5f)
             {
-                size = new Size(_lenght * 10, random.Next(4, _lenght));
+                size = new Size(_lenght * 10, random.Next(6, _lenght*5));
             }
             else //é um retangulo virado na vertical
             {
 
-                size = new Size(random.Next(4, _lenght), _lenght * 10);
+                size = new Size(random.Next(6, _lenght*10), _lenght * 5);
             }
 
             foreach (var ob in obstaculos)
             {
-                while (MathFunctions.isColliding(new Rectangle(MathFunctions.TransformVectorToPoint(posicao), size),
+                while (MathFunctions.isCollidingRectangles(new Rectangle(MathFunctions.TransformVectorToPoint(posicao), size),
                                               new Rectangle(MathFunctions.TransformVectorToPoint(ob.posicao), ob.size)) )
                 {
                     if (counter >= maxTentativas) break;
@@ -62,8 +64,8 @@ namespace GolfGame.Classes
 
         public void Draw(Graphics g)
         {
-
-            g.FillRectangle(Brushes.Brown, new Rectangle(MathFunctions.TransformVectorToPoint(posicao), size));
+            Brush brush = new SolidBrush(color);
+            g.FillRectangle(brush, new Rectangle(MathFunctions.TransformVectorToPoint(posicao), size));
 
         }
     }

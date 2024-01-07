@@ -74,6 +74,10 @@ namespace GolfGame.Classes
                 //A força e a direcção normalizada vezes a forca(Distancia do rato) vezes a Força de tacada
                 Vector2 force = directionNormalized * strenght * manager.optionsValues.hitPower;
                 score++;
+                bola.startPosition = bola.posicao;
+                bola.lastPosicoes.Clear();
+
+
                 bola.AddForce(force);
 
             }
@@ -122,7 +126,7 @@ namespace GolfGame.Classes
             GameManager.Instance.DrawText(g, "canShoot:" + bola.canShoot.ToString() + "|score:" + score.ToString(), Vector2.One, 14);
 
 
-            
+
 
             //AQUI PARA A FRENTE DESENHO O QUE QUISER
             if (isShooting && bola.canShoot)
@@ -137,17 +141,28 @@ namespace GolfGame.Classes
 
             }
 
-            //Aqui vou ter que arranjar isto pq isto apenas desenha a parte de fora!
 
-            g.FillEllipse(Brushes.Black, new Rectangle((int)buraco.posicao.X - (int)(buraco.size / 2), (int)buraco.posicao.Y - (int)(buraco.size / 2), (int)buraco.size, (int)buraco.size));
-
-            g.FillEllipse(Brushes.Red, new Rectangle((int)bola.posicao.X - (int)(bola.size / 2), (int)bola.posicao.Y - (int)(bola.size / 2), (int)bola.size, (int)bola.size));
-
-
-            foreach(var obstaculo in obstaculos)
+            
+            foreach (var obstaculo in obstaculos)
             {
                 obstaculo.Draw(g);
             }
+
+            
+                g.FillEllipse(Brushes.Black, new Rectangle((int)buraco.posicao.X - (int)(buraco.size / 2), (int)buraco.posicao.Y - (int)(buraco.size / 2), (int)buraco.size, (int)buraco.size));
+
+            Brush bolaBrush = new SolidBrush(bola.cor);
+            g.FillEllipse(bolaBrush, new Rectangle((int)bola.posicao.X - (int)(bola.size / 2), (int)bola.posicao.Y - (int)(bola.size / 2), (int)bola.size, (int)bola.size));
+
+            for(int i = 0; i<bola.lastPosicoes.Count;i++)
+            {
+                if(i!= bola.lastPosicoes.Count - 1)
+                {
+                    g.DrawLine(Pens.Black, MathFunctions.TransformVectorToPoint(bola.lastPosicoes[i]), MathFunctions.TransformVectorToPoint(bola.lastPosicoes[i + 1]));
+                }
+                
+            }
+
         }
 
         private void DrawArrow(Graphics g, Vector2 inicialPoint, Vector2 direction, float length)
