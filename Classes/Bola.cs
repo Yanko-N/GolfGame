@@ -22,7 +22,7 @@ namespace GolfGame.Classes
 
         public Vector2 startPosition { get; set; }
 
-
+        public List<Vector2> intersectionPointsPositions = new List<Vector2>();
         public List<Vector2> lastPosicoes { get; set; } = new List<Vector2>();
 
         public Bola(Vector2 posicao, Vector2 velocidade, Color cor, float size)
@@ -60,7 +60,9 @@ namespace GolfGame.Classes
                 if (MathFunctions.LineRectangleIntersect(startPosition, posicao, ob.retangulo, out Vector2 recIntersectionPoint))
                 {
 
-                    // Determina donde bateu
+                    intersectionPointsPositions.Add(recIntersectionPoint);
+
+                    // Determina donde bateu cima baixo 
                     float diferencaX = posicao.X - ob.posicao.X;
                     float diferencaY = posicao.Y - ob.posicao.Y;
 
@@ -127,6 +129,8 @@ namespace GolfGame.Classes
 
                 startPosition = posicao;
                 lastPosicoes.Add(posicao);
+                intersectionPointsPositions.Add(posicao);
+
 
             }
 
@@ -181,6 +185,9 @@ namespace GolfGame.Classes
             {
                 canShoot = true;
                 cor = Color.Red;
+                lastPosicoes.Add(posicao);
+                
+
             }
 
             //resetar a acelaração

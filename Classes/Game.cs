@@ -21,7 +21,7 @@ namespace GolfGame.Classes
 
 
         //Lista de obstaculos ainda tem de se adicionar
-        List<Obstaculo> obstaculos=new List<Obstaculo>();
+        List<Obstaculo> obstaculos = new List<Obstaculo>();
 
 
         public Game(PictureBox box) //esta caixa serve apenas para pegarmos as medidas da area de jogo
@@ -51,14 +51,14 @@ namespace GolfGame.Classes
             //AQUI IREMOS FAZER DEPOIS O SPAWN AS OBSTACULOS
             int numeroObstaculos = random.Next(3, 10);
 
-            for(int i = 0; i < numeroObstaculos; i++)
+            for (int i = 0; i < numeroObstaculos; i++)
             {
 
                 int lenght = random.Next(5, 10);
 
-               
 
-                Obstaculo newObstaculo = new Obstaculo(box,lenght,obstaculos);
+
+                Obstaculo newObstaculo = new Obstaculo(box, lenght, obstaculos);
                 obstaculos.Add(newObstaculo);
             }
 
@@ -76,6 +76,8 @@ namespace GolfGame.Classes
                 score++;
                 bola.startPosition = bola.posicao;
                 bola.lastPosicoes.Clear();
+                bola.intersectionPointsPositions.Clear();
+
 
 
                 bola.AddForce(force);
@@ -85,7 +87,7 @@ namespace GolfGame.Classes
 
         public void HandleCollision(Vector2 arenaSize)
         {
-            bola.Collisions(arenaSize,obstaculos);
+            bola.Collisions(arenaSize, obstaculos);
 
 
 
@@ -93,14 +95,15 @@ namespace GolfGame.Classes
 
         public bool CheckWinningCollision()
         {
-            if (wonState) {
+            if (wonState)
+            {
                 return true;
             }
 
             if (bola.posicao.X < (buraco.posicao.X + buraco.size / 2) && bola.posicao.X > (buraco.posicao.X - buraco.size / 2)
                && bola.posicao.Y < (buraco.posicao.Y + buraco.size / 2) && bola.posicao.Y > (buraco.posicao.Y - buraco.size / 2))
             {
-                
+
                 return wonState = true;
             }
             else
@@ -142,27 +145,34 @@ namespace GolfGame.Classes
             }
 
 
-            
+
             foreach (var obstaculo in obstaculos)
             {
                 obstaculo.Draw(g);
             }
 
-            
-                g.FillEllipse(Brushes.Black, new Rectangle((int)buraco.posicao.X - (int)(buraco.size / 2), (int)buraco.posicao.Y - (int)(buraco.size / 2), (int)buraco.size, (int)buraco.size));
+
+            g.FillEllipse(Brushes.Black, new Rectangle((int)buraco.posicao.X - (int)(buraco.size / 2), (int)buraco.posicao.Y - (int)(buraco.size / 2), (int)buraco.size, (int)buraco.size));
 
             Brush bolaBrush = new SolidBrush(bola.cor);
             g.FillEllipse(bolaBrush, new Rectangle((int)bola.posicao.X - (int)(bola.size / 2), (int)bola.posicao.Y - (int)(bola.size / 2), (int)bola.size, (int)bola.size));
 
-            for(int i = 0; i<bola.lastPosicoes.Count;i++)
+            for (int i = 0; i < bola.lastPosicoes.Count; i++)
             {
-                if(i!= bola.lastPosicoes.Count - 1)
+                if (i != bola.lastPosicoes.Count - 1)
                 {
                     g.DrawLine(Pens.Black, MathFunctions.TransformVectorToPoint(bola.lastPosicoes[i]), MathFunctions.TransformVectorToPoint(bola.lastPosicoes[i + 1]));
                 }
-                
+
             }
 
+            for (int i = 0; i < bola.intersectionPointsPositions.Count; i++)
+            {
+
+                g.DrawRectangle(Pens.Purple, new Rectangle(MathFunctions.TransformVectorToPoint(bola.intersectionPointsPositions[i]), new Size(4, 4)));
+
+
+            }
         }
 
         private void DrawArrow(Graphics g, Vector2 inicialPoint, Vector2 direction, float length)
