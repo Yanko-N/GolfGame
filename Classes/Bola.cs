@@ -57,47 +57,34 @@ namespace GolfGame.Classes
             foreach (var ob in obstaculos)
             {
 
-                if (MathFunctions.LineRectangleIntersect(startPosition, posicao, ob.retangulo, out Vector2 recIntersectionPoint))
+                if (MathFunctions.LineRectangleIntersect(startPosition, posicao, ob.retangulo, out Vector2 recIntersectionPoint,out int side))
                 {
 
                     intersectionPointsPositions.Add(recIntersectionPoint);
 
-                    // Determina donde bateu cima baixo 
-                    float diferencaX = posicao.X - ob.posicao.X;
-                    float diferencaY = posicao.Y - ob.posicao.Y;
+                    switch (side)
+                    {
+                        case 1://left
+                            posicao = new Vector2(recIntersectionPoint.X, posicao.Y);
+                            velocidade = new Vector2(-velocidade.X, velocidade.Y);
+                            
+                            break;
+                        case 2://right
+                            posicao = new Vector2(recIntersectionPoint.X, posicao.Y);
+                            velocidade = new Vector2(-velocidade.X, velocidade.Y);
+                          
+                            break;
+                        case 3://top
+                            posicao = new Vector2(posicao.X, recIntersectionPoint.Y);
+                            velocidade = new Vector2(velocidade.X, -velocidade.Y);
+                            break;
+                        case 4://bottom
+                            posicao = new Vector2(posicao.X, recIntersectionPoint.Y);
+                            velocidade = new Vector2(velocidade.X, -velocidade.Y);
+                            break;
+                    }
 
-                    //  X-axis 
-                    if (Math.Abs(diferencaX) > Math.Abs(diferencaY))
-                    {
-                        // collide da esquerda
-                        if (diferencaX > 0)
-                        {
-                            posicao = new Vector2(recIntersectionPoint.X , posicao.Y);
-                            velocidade = new Vector2(-velocidade.X, velocidade.Y);
-                        }
-                        // Collide da direita
-                        else
-                        {
-                            posicao = new Vector2(recIntersectionPoint.X , posicao.Y);
-                            velocidade = new Vector2(-velocidade.X, velocidade.Y);
-                        }
-                    }
-                    // y-axis
-                    else
-                    {
-                        // Collide de cima
-                        if (diferencaY > 0)
-                        {
-                            posicao = new Vector2(posicao.X, recIntersectionPoint.Y );
-                            velocidade = new Vector2(velocidade.X, -velocidade.Y);
-                        }
-                        // Collide de baixo
-                        else
-                        {
-                            posicao = new Vector2(posicao.X, recIntersectionPoint.Y );
-                            velocidade = new Vector2(velocidade.X, -velocidade.Y);
-                        }
-                    }
+                    
 
 
                     lastPosicoes.Add(recIntersectionPoint);
@@ -179,12 +166,12 @@ namespace GolfGame.Classes
             if (velocidade.Length() > 0 + 8f)
             {
                 canShoot = false;
-                cor = Color.OrangeRed;
+                //cor = Color.OrangeRed;
             }
             else
             {
                 canShoot = true;
-                cor = Color.Red;
+                //cor = Color.Red;
                 lastPosicoes.Add(posicao);
                 
 

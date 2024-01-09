@@ -49,7 +49,7 @@ namespace GolfGame.Classes
         /// <param name="rec">this simbolizes the rectangle that is gonna intersect</param>
         /// <param name="intersectionPoint">this simbolizes the first intersection Point</param>
         /// <returns></returns>
-        public static bool LineRectangleIntersect(Vector2 startPoint, Vector2 endPoint, Rectangle rec, out Vector2 intersectionPoint)
+        public static bool LineRectangleIntersect(Vector2 startPoint, Vector2 endPoint, Rectangle rec, out Vector2 intersectionPoint,out int side)
         {
             bool left = LineLineIntersect(startPoint, endPoint, new Vector2(rec.Left, rec.Top), new Vector2(rec.Left, rec.Bottom), out Vector2 intersectPoint1);
             bool right = LineLineIntersect(startPoint, endPoint, new Vector2(rec.Right, rec.Top), new Vector2(rec.Right, rec.Bottom), out Vector2 intersectPoint2);
@@ -58,6 +58,7 @@ namespace GolfGame.Classes
 
 
             intersectionPoint = Vector2.Zero;
+            side = 0;
             List<Vector2> intersectPoints = new List<Vector2>
             {
                 intersectPoint1,
@@ -85,7 +86,23 @@ namespace GolfGame.Classes
                             intersectionPoint = intersectPoints[i];
                         }
                     }
-                    
+
+                }
+                if (left)
+                {
+                    side = 1;
+                }
+                if (right)
+                {
+                    side = 2;
+                }
+                if (top)
+                {
+                    side = 3;
+                }
+                if (bottom)
+                {
+                    side = 4;
                 }
 
                 return true;
