@@ -100,18 +100,16 @@ namespace GolfGame.Classes
                 return true;
             }
 
-            if (bola.posicao.X < (buraco.posicao.X + buraco.size / 2) && bola.posicao.X > (buraco.posicao.X - buraco.size / 2)
-               && bola.posicao.Y < (buraco.posicao.Y + buraco.size / 2) && bola.posicao.Y > (buraco.posicao.Y - buraco.size / 2))
-            {
 
+            if (MathFunctions.LineRectangleIntersect(bola.startPosition,bola.posicao,new Rectangle(MathFunctions.TransformVectorToPoint(buraco.posicao - Vector2.One * buraco.size/2),new Size((int)buraco.size/2,(int)buraco.size/2)),out Vector2 intersectPoint,out int side))
+            {
                 return wonState = true;
             }
             else
             {
                 return false;
             }
-
-
+            
         }
         public void HandleMoviment()
         {
