@@ -17,16 +17,26 @@ namespace GolfGame.Classes
         {
             highScore = 999999;
             frictionValue = 3f;
+            maxFrictionValue = 5f;
             hitPower = 8f;
+            maxHitPowerValue = 10f;
             maxSpeed = 10f;
+            maxSpeedValue = 20f;
+
         }
 
         public int highScore { get; set; }
 
         public float frictionValue { get; set; }
+        public float maxFrictionValue { get; set; }
+
 
         public float hitPower { get; set; }
-        public float maxSpeed { get;  set; }
+        public float maxHitPowerValue { get; set; }
+
+        public float maxSpeed { get; set; }
+        public float maxSpeedValue { get; set; }
+
     }
     class GameManager
     {
@@ -200,12 +210,6 @@ namespace GolfGame.Classes
         /// </summary>
         async Task OptionsErrorHandlerAsync(string optionsFilePath)
         {
-            const int highScoreDefault = 999999;
-            const float frictionDefault = 3f;
-            const float hitPowerDefault = 8f;
-            const float maxSpeedDefaullt = 10f;
-
-
 
             try
             {

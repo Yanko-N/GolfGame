@@ -126,7 +126,6 @@ namespace GolfGame.Classes
 
             //Limpa o buffer
             g.Clear(Color.LightGreen);
-            GameManager.Instance.DrawText(g, "canShoot:" + bola.canShoot.ToString() + "|score:" + score.ToString(), Vector2.One, 14);
 
 
 
@@ -155,6 +154,7 @@ namespace GolfGame.Classes
             g.FillEllipse(Brushes.Black, new Rectangle((int)buraco.posicao.X - (int)(buraco.size / 2), (int)buraco.posicao.Y - (int)(buraco.size / 2), (int)buraco.size, (int)buraco.size));
 
             Brush bolaBrush = new SolidBrush(bola.cor);
+
             g.FillEllipse(bolaBrush, new Rectangle((int)bola.posicao.X - (int)(bola.size / 2), (int)bola.posicao.Y - (int)(bola.size / 2), (int)bola.size, (int)bola.size));
 
             for (int i = 0; i < bola.lastPosicoes.Count; i++)
@@ -173,6 +173,9 @@ namespace GolfGame.Classes
 
 
             }
+
+            GameManager.Instance.DrawText(g, "canShoot:" + bola.canShoot.ToString() + "|score:" + score.ToString(), Vector2.One, 14);
+
         }
 
         private void DrawArrow(Graphics g, Vector2 inicialPoint, Vector2 direction, float length)

@@ -168,7 +168,7 @@ namespace GolfGame
             {
                 //limpa as graficos
                 g.Clear(Color.LightGreen);
-                var text = $"You won!\nscore: {score.ToString()}!";
+                var text = $"You won!\nscore: {score}!";
 
                 if(score < GameManager.Instance.optionsValues.highScore)
                 {
@@ -184,7 +184,7 @@ namespace GolfGame
                     Vector2 scaledHalf = MathFunctions.ScaleVectorToNewSpace(MathFunctions.TransformSizeToVector(this.Size) * Vector2.One * 0.25f, originalSize, currentSize);
 
 
-                    GameManager.Instance.DrawText(g, "You Won", scaledHalf, 32);
+                    GameManager.Instance.DrawText(g, text, scaledHalf, 32);
 
 
                 }
@@ -194,7 +194,7 @@ namespace GolfGame
                     var vectorPosicao = new Vector2(this.Size.Width / 4, this.Size.Height / 4);
                     
 
-                    GameManager.Instance.DrawText(g, "You Won", vectorPosicao, 32);
+                    GameManager.Instance.DrawText(g, text, vectorPosicao, 32);
 
 
                 }

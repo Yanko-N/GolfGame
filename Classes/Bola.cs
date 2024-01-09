@@ -65,21 +65,21 @@ namespace GolfGame.Classes
                     switch (side)
                     {
                         case 1://left
-                            posicao = new Vector2(recIntersectionPoint.X, posicao.Y);
+                            posicao = new Vector2(recIntersectionPoint.X - size/2, posicao.Y);
                             velocidade = new Vector2(-velocidade.X, velocidade.Y);
                             
                             break;
                         case 2://right
-                            posicao = new Vector2(recIntersectionPoint.X, posicao.Y);
+                            posicao = new Vector2(recIntersectionPoint.X + -size / 2, posicao.Y);
                             velocidade = new Vector2(-velocidade.X, velocidade.Y);
                           
                             break;
                         case 3://top
-                            posicao = new Vector2(posicao.X, recIntersectionPoint.Y);
+                            posicao = new Vector2(posicao.X, recIntersectionPoint.Y - size / 2) ;
                             velocidade = new Vector2(velocidade.X, -velocidade.Y);
                             break;
                         case 4://bottom
-                            posicao = new Vector2(posicao.X, recIntersectionPoint.Y);
+                            posicao = new Vector2(posicao.X, recIntersectionPoint.Y + size / 2);
                             velocidade = new Vector2(velocidade.X, -velocidade.Y);
                             break;
                     }
@@ -93,6 +93,7 @@ namespace GolfGame.Classes
             }
 
         }
+
         /// <summary>
         /// Verifico se ultrapassou os eixos X,Y e se sim mudo a direção e ajusto a posicao
         /// </summary>
@@ -142,6 +143,7 @@ namespace GolfGame.Classes
             }
         }
 
+
         /// <summary>
         /// Movimenta o player de acordo com a velocidade que lhe é aplicada por outros metodos
         /// por isso apenas tem de ser chamada no UPDATE para adicionar a sua velocidade
@@ -166,15 +168,14 @@ namespace GolfGame.Classes
             if (velocidade.Length() > 0 + 8f)
             {
                 canShoot = false;
-                //cor = Color.OrangeRed;
+                cor = Color.OrangeRed;
             }
             else
             {
                 canShoot = true;
-                //cor = Color.Red;
-                lastPosicoes.Add(posicao);
-                
+                cor = Color.Red;
 
+                lastPosicoes.Add(posicao);
             }
 
             //resetar a acelaração
@@ -184,6 +185,7 @@ namespace GolfGame.Classes
 
         public void AddForce(Vector2 force)
         {
+            lastPosicoes.Add(posicao);
             //instanciar o GameManager para obter o valor do hitPower
             GameManager manager = GameManager.GetManager();
             this.acelaracao += force * manager.optionsValues.hitPower;

@@ -54,7 +54,7 @@ namespace GolfGame.Classes
             maxSpeedValueSlider = new TrackBar
             {
                 Minimum = 1,
-                Maximum = 100,
+                Maximum = (int)GameManager.Instance.optionsValues.maxSpeedValue * 10,
                 TickFrequency = 10,
                 LargeChange = 10,
                 SmallChange = 1,
@@ -66,7 +66,7 @@ namespace GolfGame.Classes
             hitPowerSlider = new TrackBar
             {
                 Minimum = 1,
-                Maximum = 100,
+                Maximum = (int)GameManager.Instance.optionsValues.maxHitPowerValue * 10,
                 TickFrequency = 10,
                 LargeChange = 10,
                 SmallChange = 1,
@@ -78,7 +78,7 @@ namespace GolfGame.Classes
             frictionValueSlider = new TrackBar
             {
                 Minimum = 0,
-                Maximum = 100,
+                Maximum = (int)GameManager.Instance.optionsValues.maxFrictionValue * 10,
                 TickFrequency = 10,
                 LargeChange = 10,
                 SmallChange = 1,
